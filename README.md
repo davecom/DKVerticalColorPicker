@@ -10,7 +10,7 @@ DKVerticalColorPicker is a simple iOS color picker presented as a vertical color
 * Teeny tiny codebase with no dependencies
 
 ## Installation
-Simply copy `DKVerticalColorPicker.m` and `DKVerticalColorPicker.h` into your project.  If there is demand, I may package a CocoaPod.
+Simply copy `DKVerticalColorPicker.m` and `DKVerticalColorPicker.h` into your project or use the CocoaPod `DKVerticalColorPicker`.
 
 ## Usage
 You can drag a `UIView` out in IB and set its class as `DKVerticalColorPicker` or you can instantiate it in code via `initWithFrame`. Make it whatever size suits your app.  Either way, you'll want to set its `delegate` property to a class that implements the protocol `DKVerticalColorPickerDelegate`.
