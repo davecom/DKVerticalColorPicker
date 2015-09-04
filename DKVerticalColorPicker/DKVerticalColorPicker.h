@@ -22,22 +22,33 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
- 
+
 #import <UIKit/UIKit.h>
+
+static NSString *DKCOLOR_TOUCHES_BEGAN_TYPE = @"touchesBegan";
+static NSString *DKCOLOR_TOUCHES_MOVED_TYPE = @"touchesMoved";
+static NSString *DKCOLOR_TOUCHES_ENDED_TYPE = @"touchesEnded";
+
+static const int END_OF_GRAYSCALE_SECTION = 30;
+
+static const int END_OF_WHITE_SECTION = END_OF_GRAYSCALE_SECTION + 5;
+
+static const double COLOR_SATURATION = 0.8;
 
 /*!
  A delegate that gets notifications when the color picked changes.
  */
 @protocol DKVerticalColorPickerDelegate <NSObject>
 @optional
--(void)colorPicked:(UIColor *)color;
+- (void)colorPicked:(UIColor *)aColor withTouchType:(NSString *)aTouchType;
 @end
 
 IB_DESIGNABLE
 
 @interface DKVerticalColorPicker : UIView
 
-@property (nonatomic, weak) IBOutlet id<DKVerticalColorPickerDelegate> delegate;  //set after inited
-@property (nonatomic) IBInspectable UIColor *selectedColor;  //setting this will update the UI & notify the delegate
+@property(nonatomic, weak) IBOutlet id <DKVerticalColorPickerDelegate> delegate;  //set after inited
+@property(nonatomic) IBInspectable UIColor *selectedColor;  //setting this will update the UI & notify the delegate
 
+- (UIColor *)getColor:(CGFloat)aY;
 @end
