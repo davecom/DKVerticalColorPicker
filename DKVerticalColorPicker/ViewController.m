@@ -10,8 +10,8 @@
 
 @interface ViewController ()
 
-@property (nonatomic, weak) IBOutlet DKVerticalColorPicker *vertPicker;
-@property (nonatomic, weak) IBOutlet UIView *sampleView;
+@property(nonatomic, weak) IBOutlet DKVerticalColorPicker *vertPicker;
+@property(nonatomic, weak) IBOutlet UIView *sampleView;
 
 @end
 
@@ -27,8 +27,7 @@
     // Dispose of any resources that can be recreated.
 }
 
--(void)colorPicked:(UIColor *)color
-{
+- (void)colorPicked:(UIColor *)color {
     self.sampleView.backgroundColor = color;
 }
 

@@ -27,7 +27,7 @@
 
 @interface DKVerticalColorPicker ()
 
-@property (nonatomic) CGFloat currentSelectionY;
+@property(nonatomic) CGFloat currentSelectionY;
 
 @end
 
@@ -36,7 +36,8 @@
 - (instancetype)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
-    if (self) {
+    if (self)
+    {
         self.currentSelectionY = 0.0;
         self.backgroundColor = [UIColor clearColor];
     }
@@ -47,36 +48,105 @@
 - (instancetype)initWithCoder:(NSCoder *)coder
 {
     self = [super initWithCoder:coder];
-    if (self) {
+    if (self)
+    {
         self.currentSelectionY = 0.0;
         self.backgroundColor = [UIColor clearColor];
     }
     return self;
 }
 
-- (void)drawRect:(CGRect)rect {
+- (void)drawRect:(CGRect)rect
+{
     // Drawing code
     [super drawRect:rect];
-    
+
     //draw wings
     [[UIColor blackColor] set];
     CGFloat tempYPlace = self.currentSelectionY;
-    if (tempYPlace < 0.0) {
+    if (tempYPlace < 0.0)
+    {
         tempYPlace = 0.0;
-    } else if (tempYPlace >= self.frame.size.height) {
+    } else if (tempYPlace >= self.frame.size.height)
+    {
         tempYPlace = self.frame.size.height - 1.0;
     }
     CGRect temp = CGRectMake(0.0, tempYPlace, self.frame.size.width, 1.0);
     UIRectFill(temp);
-    
+
     //draw central bar over it
     CGFloat cbxbegin = self.frame.size.width * 0.2;
     CGFloat cbwidth = self.frame.size.width * 0.6;
-    for (int y = 0; y < self.frame.size.height; y++) {
-        [[UIColor colorWithHue:(y/self.frame.size.height) saturation:1.0 brightness:1.0 alpha:1.0] set];
-        CGRect temp = CGRectMake(cbxbegin, y, cbwidth, 1.0);
-        UIRectFill(temp);
+    for (int y = 0; y < self.frame.size.height; y++)
+    {
+
+
+        UIColor *theColor = [self getColor:y];
+        [theColor set];
+        CGRect theColorRect = CGRectMake(cbxbegin, y, cbwidth, 1.0);
+        UIRectFill(theColorRect);
     }
+}
+
+- (UIColor *)getColor:(CGFloat)aY
+{
+//        [[UIColor colorWithHue:(y/self.frame.size.height) saturation:1.0 brightness:1.0 alpha:1.0] set];
+
+    CGFloat theMinY = 0;
+    CGFloat theMaxY = self.frame.size.height;
+
+    if (aY < END_OF_GRAYSCALE_SECTION)
+    {
+        return [self getGrayscaleColor:aY
+                              fromMinY:theMinY
+                                toMaxY:END_OF_GRAYSCALE_SECTION];
+    }
+    else if (aY < END_OF_WHITE_SECTION)
+    {
+        return [self getWhiteColor];
+    }
+    else
+    {
+        return [self getRainbowHueColor:aY fromMinY:END_OF_WHITE_SECTION toMaxY:theMaxY];
+    }
+}
+
+- (UIColor *)getWhiteColor
+{
+    return [UIColor colorWithHue:0 saturation:0 brightness:1 alpha:1.0];
+}
+
+- (UIColor *)getGrayscaleColor:(CGFloat)aY fromMinY:(CGFloat)aMinY toMaxY:(CGFloat)aMaxY
+{
+    CGFloat hue = 0;
+    CGFloat s = 0;
+    CGFloat b = mapInputToRange(aY, aMinY, aMaxY, 0, 1);
+    UIColor *theColor = [UIColor colorWithHue:hue saturation:s brightness:b alpha:1.0];
+    return theColor;
+}
+
+- (UIColor *)getRainbowHueColor:(CGFloat)aY fromMinY:(CGFloat)aMinY toMaxY:(CGFloat)aMaxY
+{
+    CGFloat hue = mapInputToRange(aY, aMinY, aMaxY, 0, 1);
+    CGFloat s = COLOR_SATURATION;
+    CGFloat b = 1;
+    UIColor *theColor = [UIColor colorWithHue:hue saturation:s brightness:b alpha:1.0];
+    return theColor;
+}
+
+CGFloat projectNormal(CGFloat n, CGFloat start, CGFloat end)
+{
+    return start + (n * (end - start));
+}
+
+CGFloat normalize(CGFloat value, CGFloat startValue, CGFloat endValue)
+{
+    return (value - startValue) / (endValue - startValue);
+}
+
+CGFloat mapInputToRange(CGFloat input, CGFloat startValue, CGFloat endValue, CGFloat outputStart, CGFloat outputEnd)
+{
+    return projectNormal(MAX(0, MIN(1, normalize(input, startValue, endValue))), outputStart, outputEnd);
 }
 
 /*!
@@ -93,7 +163,7 @@
             [self setNeedsDisplay];
         }
         _selectedColor = selectedColor;
-        if([self.delegate respondsToSelector:@selector(colorPicked:)])
+        if ([self.delegate respondsToSelector:@selector(colorPicked:)])
         {
             [self.delegate colorPicked:_selectedColor];
         }
@@ -104,42 +174,42 @@
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {
-    //update color
-    self.currentSelectionY = [((UITouch *)[touches anyObject]) locationInView:self].y;
-    _selectedColor = [UIColor colorWithHue:(self.currentSelectionY / self.frame.size.height) saturation:1.0 brightness:1.0 alpha:1.0];
-    //notify delegate
-    if([self.delegate respondsToSelector:@selector(colorPicked:)])
-    {
-        [self.delegate colorPicked:self.selectedColor];
-    }
+    [self updateColor:touches];
+    [self notifyDelegate];
     [self setNeedsDisplay];
 }
+
+- (void)updateColor:(const NSSet *)touches
+{
+    self.currentSelectionY = [((UITouch *) [touches anyObject]) locationInView:self].y;
+    _selectedColor = [self getColor:self.currentSelectionY];
+}
+
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event
 {
-    //update color
-    self.currentSelectionY = [((UITouch *)[touches anyObject]) locationInView:self].y;
-    _selectedColor = [UIColor colorWithHue:(self.currentSelectionY / self.frame.size.height) saturation:1.0 brightness:1.0 alpha:1.0];
-    //notify delegate
-    if([self.delegate respondsToSelector:@selector(colorPicked:)])
-    {
-        [self.delegate colorPicked:self.selectedColor];
-    }
+    [self updateColor:touches];
+    [self notifyDelegate];
     [self setNeedsDisplay];
 }
+
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
 {
-    //update color
-    self.currentSelectionY = [((UITouch *)[touches anyObject]) locationInView:self].y;
-    _selectedColor = [UIColor colorWithHue:(self.currentSelectionY / self.frame.size.height) saturation:1.0 brightness:1.0 alpha:1.0];
-    //notify delegate
-    if([self.delegate respondsToSelector:@selector(colorPicked:)])
+    [self updateColor:touches];
+
+    [self notifyDelegate];
+    [self setNeedsDisplay];
+}
+
+- (void)notifyDelegate
+{
+    if ([self.delegate respondsToSelector:@selector(colorPicked:)])
     {
         [self.delegate colorPicked:self.selectedColor];
     }
-    [self setNeedsDisplay];
 }
+
 - (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event
 {
-    
+
 }
 @end
