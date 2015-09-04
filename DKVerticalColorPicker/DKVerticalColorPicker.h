@@ -25,6 +25,10 @@ SOFTWARE.
 
 #import <UIKit/UIKit.h>
 
+static NSString *DKCOLOR_TOUCHES_BEGAN_TYPE = @"touchesBegan";
+static NSString *DKCOLOR_TOUCHES_MOVED_TYPE = @"touchesMoved";
+static NSString *DKCOLOR_TOUCHES_ENDED_TYPE = @"touchesEnded";
+
 static const int END_OF_GRAYSCALE_SECTION = 30;
 
 static const int END_OF_WHITE_SECTION = END_OF_GRAYSCALE_SECTION + 5;
@@ -36,7 +40,7 @@ static const double COLOR_SATURATION = 0.8;
  */
 @protocol DKVerticalColorPickerDelegate <NSObject>
 @optional
-- (void)colorPicked:(UIColor *)color;
+- (void)colorPicked:(UIColor *)aColor withTouchType:(NSString *)aTouchType;
 @end
 
 IB_DESIGNABLE

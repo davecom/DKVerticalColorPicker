@@ -11,7 +11,7 @@
 
 @interface ViewController : UIViewController <DKVerticalColorPickerDelegate>
 
-- (void)colorPicked:(UIColor *)color;
+- (void)colorPicked:(UIColor *)aColor withTouchType:(NSString *)aTouchType;
 
 @end
 

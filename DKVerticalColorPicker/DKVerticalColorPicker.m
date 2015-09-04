@@ -163,9 +163,9 @@ CGFloat mapInputToRange(CGFloat input, CGFloat startValue, CGFloat endValue, CGF
             [self setNeedsDisplay];
         }
         _selectedColor = selectedColor;
-        if ([self.delegate respondsToSelector:@selector(colorPicked:)])
+        if ([self.delegate respondsToSelector:@selector(colorPicked:withTouchType:)])
         {
-            [self.delegate colorPicked:_selectedColor];
+            [self.delegate colorPicked:_selectedColor withTouchType:nil];
         }
     }
 }
@@ -175,7 +175,7 @@ CGFloat mapInputToRange(CGFloat input, CGFloat startValue, CGFloat endValue, CGF
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {
     [self updateColor:touches];
-    [self notifyDelegate];
+    [self notifyDelegate:DKCOLOR_TOUCHES_BEGAN_TYPE];
     [self setNeedsDisplay];
 }
 
@@ -188,7 +188,7 @@ CGFloat mapInputToRange(CGFloat input, CGFloat startValue, CGFloat endValue, CGF
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event
 {
     [self updateColor:touches];
-    [self notifyDelegate];
+    [self notifyDelegate:DKCOLOR_TOUCHES_MOVED_TYPE];
     [self setNeedsDisplay];
 }
 
@@ -196,15 +196,15 @@ CGFloat mapInputToRange(CGFloat input, CGFloat startValue, CGFloat endValue, CGF
 {
     [self updateColor:touches];
 
-    [self notifyDelegate];
+    [self notifyDelegate:DKCOLOR_TOUCHES_ENDED_TYPE];
     [self setNeedsDisplay];
 }
 
-- (void)notifyDelegate
+- (void)notifyDelegate:(NSString *)aTouchType
 {
-    if ([self.delegate respondsToSelector:@selector(colorPicked:)])
+    if ([self.delegate respondsToSelector:@selector(colorPicked:withTouchType:)])
     {
-        [self.delegate colorPicked:self.selectedColor];
+        [self.delegate colorPicked:self.selectedColor withTouchType:aTouchType];
     }
 }
 
