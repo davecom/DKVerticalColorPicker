@@ -31,11 +31,11 @@ typedef NS_ENUM(NSInteger, DKColorPickerTouchType) {
     DKColorPickerTouchTypeTouchesEnded
 };
 
-static const int END_OF_GRAYSCALE_SECTION = 30;
+static const CGFloat END_OF_GRAYSCALE_SECTION = 30;
 
-static const int END_OF_WHITE_SECTION = END_OF_GRAYSCALE_SECTION + 5;
+static const CGFloat END_OF_WHITE_SECTION = END_OF_GRAYSCALE_SECTION + 5;
 
-static const double COLOR_SATURATION = 0.8;
+static const CGFloat COLOR_SATURATION = 0.8;
 
 /*!
  A delegate that gets notifications when the color picked changes.
@@ -53,4 +53,5 @@ IB_DESIGNABLE
 @property(nonatomic) IBInspectable UIColor *selectedColor;  //setting this will update the UI & notify the delegate
 
 - (UIColor *)getColor:(CGFloat)aY;
+-(CGFloat) getYFromColor: (UIColor *) aColor;
 @end

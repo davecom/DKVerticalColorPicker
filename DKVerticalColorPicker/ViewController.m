@@ -29,7 +29,7 @@
 
 - (void)colorPicked:(UIColor *)aColor withTouchType:(DKColorPickerTouchType)aTouchType
 {
-    self.sampleView.backgroundColor = color;
+    self.sampleView.backgroundColor = aColor;
 }
 
 @end

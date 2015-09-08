@@ -86,10 +86,26 @@
     }
 }
 
+
+CGFloat projectNormal(CGFloat n, CGFloat start, CGFloat end)
+{
+    return start + (n * (end - start));
+}
+
+CGFloat normalize(CGFloat value, CGFloat startValue, CGFloat endValue)
+{
+    return (value - startValue) / (endValue - startValue);
+}
+
+CGFloat mapInputToRange(CGFloat input, CGFloat startValue, CGFloat endValue, CGFloat outputStart, CGFloat outputEnd)
+{
+    return projectNormal(MAX(0, MIN(1, normalize(input, startValue, endValue))), outputStart, outputEnd);
+}
+
 - (UIColor *)getColor:(CGFloat)aY
 {
     CGFloat theMinY = 0;
-    CGFloat theMaxY = self.frame.size.height;
+    CGFloat theMaxY = [self getMaxY];
 
     if (aY < END_OF_GRAYSCALE_SECTION)
     {
@@ -105,6 +121,29 @@
     {
         return [self getRainbowHueColor:aY fromMinY:END_OF_WHITE_SECTION toMaxY:theMaxY];
     }
+}
+
+- (CGFloat)getMaxY
+{
+    return self.frame.size.height;
+}
+
+-(CGFloat) getYFromColor: (UIColor *) aColor
+{
+    CGFloat hue = 0.0, saturation = 0.0, brightness = 0.0, alpha = 0.0;
+    if ([aColor getHue:&hue saturation:&saturation brightness:&brightness alpha:&alpha])
+    {
+        if( saturation == 0 )
+        {
+            return brightness*END_OF_GRAYSCALE_SECTION;
+        }
+        else
+        {
+            return END_OF_WHITE_SECTION + hue*([ self getMaxY] - END_OF_WHITE_SECTION);
+        }
+    }
+
+    return 0;
 }
 
 - (UIColor *)getWhiteColor
@@ -130,21 +169,6 @@
     return theColor;
 }
 
-CGFloat projectNormal(CGFloat n, CGFloat start, CGFloat end)
-{
-    return start + (n * (end - start));
-}
-
-CGFloat normalize(CGFloat value, CGFloat startValue, CGFloat endValue)
-{
-    return (value - startValue) / (endValue - startValue);
-}
-
-CGFloat mapInputToRange(CGFloat input, CGFloat startValue, CGFloat endValue, CGFloat outputStart, CGFloat outputEnd)
-{
-    return projectNormal(MAX(0, MIN(1, normalize(input, startValue, endValue))), outputStart, outputEnd);
-}
-
 /*!
  Changes the selected color, updates the UI, and notifies the delegate.
  */
@@ -152,12 +176,9 @@ CGFloat mapInputToRange(CGFloat input, CGFloat startValue, CGFloat endValue, CGF
 {
     if (selectedColor != _selectedColor)
     {
-        CGFloat hue = 0.0, temp = 0.0;
-        if ([selectedColor getHue:&hue saturation:&temp brightness:&temp alpha:&temp])
-        {
-            self.currentSelectionY = floorf(hue * self.frame.size.height);
-            [self setNeedsDisplay];
-        }
+        self.currentSelectionY = [ self getYFromColor: selectedColor ];
+        [self setNeedsDisplay];
+
         _selectedColor = selectedColor;
         if ([self.delegate respondsToSelector:@selector(colorPicked:withTouchType:)])
         {
