@@ -30,9 +30,8 @@
 
 - (void)testBlack
 {
-    int theHeight = 100;
-    int theY = 0;
-    DKVerticalColorPicker *thePicker = [[DKVerticalColorPicker alloc] initWithFrame:CGRectMake(0, 0, 50, theHeight)];
+    DKVerticalColorPicker* thePicker = [self createTestColorPicker];
+    CGFloat theY = 0;
     UIColor *theBlackColor = [UIColor colorWithHue:0 saturation:0 brightness:0 alpha:1];
     XCTAssertTrue([self isColor:theBlackColor
                    equalToColor:[thePicker getColor:theY]], @"should start with black");
@@ -40,9 +39,8 @@
 
 - (void)testWhite
 {
-    int theHeight = 100;
-    int theY = END_OF_GRAYSCALE_SECTION + 2.0f;
-    DKVerticalColorPicker *thePicker = [[DKVerticalColorPicker alloc] initWithFrame:CGRectMake(0, 0, 50, theHeight)];
+    DKVerticalColorPicker* thePicker = [self createTestColorPicker];
+    CGFloat theY = END_OF_GRAYSCALE_SECTION + 2.0f;
     UIColor *theWhiteColor = [UIColor colorWithHue:0 saturation:0 brightness:1 alpha:1];
     XCTAssertTrue([self isColor:theWhiteColor
                    equalToColor:[thePicker getColor:theY]], @"should start with white");
@@ -50,9 +48,8 @@
 
 - (void)testColor
 {
-    int theHeight = 100;
-    int theY = 100;
-    DKVerticalColorPicker *thePicker = [[DKVerticalColorPicker alloc] initWithFrame:CGRectMake(0, 0, 50, theHeight)];
+    DKVerticalColorPicker* thePicker = [self createTestColorPicker];
+    CGFloat theY = 100;
     UIColor *theColor = [UIColor colorWithHue:1 saturation: 0.8 brightness:1 alpha:1];
     XCTAssertTrue([self isColor:theColor
                    equalToColor:[thePicker getColor:theY]], @"should end with color");
