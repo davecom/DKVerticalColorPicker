@@ -69,14 +69,14 @@
         tempYPlace = 0.0;
     } else if (tempYPlace >= self.frame.size.height)
     {
-        tempYPlace = self.frame.size.height - 1.0;
+        tempYPlace = self.frame.size.height - 1.0f;
     }
     CGRect temp = CGRectMake(0.0, tempYPlace, self.frame.size.width, 1.0);
     UIRectFill(temp);
 
     //draw central bar over it
-    CGFloat cbxbegin = self.frame.size.width * 0.2;
-    CGFloat cbwidth = self.frame.size.width * 0.6;
+    CGFloat cbxbegin = self.frame.size.width * 0.2f;
+    CGFloat cbwidth = self.frame.size.width * 0.6f;
     for (int y = 0; y < self.frame.size.height; y++)
     {
         UIColor *theColor = [self getColor:y];
