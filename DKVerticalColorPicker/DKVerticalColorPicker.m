@@ -161,7 +161,7 @@ CGFloat mapInputToRange(CGFloat input, CGFloat startValue, CGFloat endValue, CGF
         _selectedColor = selectedColor;
         if ([self.delegate respondsToSelector:@selector(colorPicked:withTouchType:)])
         {
-            [self.delegate colorPicked:_selectedColor withTouchType:nil];
+            [self.delegate colorPicked:_selectedColor withTouchType: DKColorPickerTouchTypeTouchesEnded ];
         }
     }
 }
